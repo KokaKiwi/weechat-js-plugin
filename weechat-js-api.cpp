@@ -639,6 +639,178 @@ API_FUNC_DEF(list_free)
     API_RETURN_OK;
 }
 
+int weechat_js_api_config_reload_cb(void *data, struct t_config_file *config_file)
+{
+    return WEECHAT_CONFIG_READ_FILE_NOT_FOUND;
+}
+
+API_FUNC_DEF(config_new)
+{
+    char *result;
+
+    API_FUNC(1, "config_new", API_RETURN_EMPTY);
+    if (args.Length() != 3)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue name(args[0]);
+    String::AsciiValue function(args[1]);
+    String::AsciiValue data(args[2]);
+
+    result = API_PTR2STR(plugin_script_api_config_new(weechat_js_plugin, js_current_script, *name, NULL, *function, *data));
+
+    API_RETURN_STRING_FREE(result);
+}
+
+API_FUNC_DEF(config_new_section)
+{
+    int user_can_add_options, user_can_delete_options;
+    char *result;
+
+    API_FUNC(1, "config_new_section", API_RETURN_EMPTY);
+    if (args.Length() != 14)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue config_file(args[0]);
+    String::AsciiValue name(args[1]);
+    user_can_add_options = args[2]->IntegerValue();
+    user_can_delete_options = args[3]->IntegerValue();
+    String::AsciiValue function_read(args[4]);
+    String::AsciiValue data_read(args[5]);
+    String::AsciiValue function_write(args[6]);
+    String::AsciiValue data_write(args[7]);
+    String::AsciiValue function_write_default(args[8]);
+    String::AsciiValue data_write_default(args[9]);
+    String::AsciiValue function_create_option(args[10]);
+    String::AsciiValue data_create_option(args[11]);
+    String::AsciiValue function_delete_option(args[12]);
+    String::AsciiValue data_delete_option(args[13]);
+
+    result = API_PTR2STR(plugin_script_api_config_new_section (weechat_js_plugin,
+                                                               js_current_script,
+                                                               (t_config_file *) API_STR2PTR(*config_file),
+                                                               *name,
+                                                               user_can_add_options,
+                                                               user_can_delete_options,
+                                                               NULL,
+                                                               *function_read,
+                                                               *data_read,
+                                                               NULL,
+                                                               *function_write,
+                                                               *data_write,
+                                                               NULL,
+                                                               *function_write_default,
+                                                               *data_write_default,
+                                                               NULL,
+                                                               *function_create_option,
+                                                               *data_create_option,
+                                                               NULL,
+                                                               *function_delete_option,
+                                                               *data_delete_option));
+
+    API_RETURN_STRING_FREE(result);
+}
+
+API_FUNC_DEF(config_search_section)
+{
+    char *result;
+
+    API_FUNC(1, "config_search_section", API_RETURN_EMPTY);
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue config_file(args[0]);
+    String::AsciiValue section_name(args[1]);
+
+    result = API_PTR2STR(weechat_config_search_section((t_config_file *) API_STR2PTR(*config_file), *section_name));
+
+    API_RETURN_STRING_FREE(result);
+}
+
+API_FUNC_DEF(config_new_option)
+{
+    char *result;
+    int min, max, null_value_allowed;
+
+    API_FUNC(1, "config_new_option", API_RETURN_EMPTY);
+    if (args.Length() != 17)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue config_file(args[0]);
+    String::AsciiValue section(args[1]);
+    String::AsciiValue name(args[2]);
+    String::AsciiValue type(args[3]);
+    String::AsciiValue description(args[4]);
+    String::AsciiValue string_values(args[5]);
+    min = args[6]->IntegerValue();
+    max = args[7]->IntegerValue();
+    String::AsciiValue default_value(args[8]);
+    String::AsciiValue value(args[9]);
+    null_value_allowed = args[10]->IntegerValue();
+    String::AsciiValue function_check_value(args[11]);
+    String::AsciiValue data_check_value(args[12]);
+    String::AsciiValue function_change(args[13]);
+    String::AsciiValue data_change(args[14]);
+    String::AsciiValue function_delete(args[15]);
+    String::AsciiValue data_delete(args[16]);
+
+    result = API_PTR2STR(plugin_script_api_config_new_option (weechat_js_plugin,
+                                                              js_current_script,
+                                                              (t_config_file *) API_STR2PTR(*config_file),
+                                                              (t_config_section *) API_STR2PTR(*section),
+                                                              *name,
+                                                              *type,
+                                                              *description,
+                                                              *string_values,
+                                                              min,
+                                                              max,
+                                                              *default_value,
+                                                              *value,
+                                                              null_value_allowed,
+                                                              NULL,
+                                                              *function_check_value,
+                                                              *data_check_value,
+                                                              NULL,
+                                                              *function_change,
+                                                              *data_change,
+                                                              NULL,
+                                                              *function_delete,
+                                                              *data_delete));
+
+    API_RETURN_STRING_FREE(result);
+}
+
+API_FUNC_DEF(config_search_option)
+{
+    char *result;
+
+    API_FUNC(1, "config_search_option", API_RETURN_EMPTY);
+    if (args.Length() != 3)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue config_file(args[0]);
+    String::AsciiValue section(args[1]);
+    String::AsciiValue option_name(args[2]);
+
+    result = API_PTR2STR(weechat_config_search_option((t_config_file *) API_STR2PTR(*config_file), (t_config_section *) API_STR2PTR(*section), *option_name));
+
+    API_RETURN_STRING_FREE(result);
+}
+
+API_FUNC_DEF(config_string_to_boolean)
+{
+    int value;
+
+    API_FUNC(1, "config_string_to_boolean", API_RETURN_INT(0));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue text(args[0]);
+
+    value = weechat_config_string_to_boolean(*text);
+
+    API_RETURN_INT(value);
+}
+
 void
 WeechatJsCore::loadLibs()
 {
@@ -676,6 +848,12 @@ WeechatJsCore::loadLibs()
     API_DEF_FUNC(list_remove);
     API_DEF_FUNC(list_remove_all);
     API_DEF_FUNC(list_free);
+    API_DEF_FUNC(config_new);
+    API_DEF_FUNC(config_new_section);
+    API_DEF_FUNC(config_search_section);
+    API_DEF_FUNC(config_new_option);
+    API_DEF_FUNC(config_search_option);
+    API_DEF_FUNC(config_string_to_boolean);
 
     this->addGlobal("weechat", weechat_obj);
 }

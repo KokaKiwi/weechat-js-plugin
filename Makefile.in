@@ -19,7 +19,7 @@ CXX := @CXX@
 
 LDFLAGS := -lv8
 
-CFLAGS := @WEECHAT_CFLAGS@ @CFLAGS@
+CFLAGS := @WEECHAT_CFLAGS@ @DEFS@ @CFLAGS@
 CXXFLAGS := $(CFLAGS)
 
 SRCS := $(wildcard *.cpp)
