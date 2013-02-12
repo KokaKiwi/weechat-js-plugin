@@ -793,6 +793,616 @@ API_FUNC_DEF(config_string_to_boolean)
     API_RETURN_INT(value);
 }
 
+API_FUNC_DEF(config_option_reset)
+{
+    int run_callback, rc;
+
+    API_FUNC(1, "config_option_reset", API_RETURN_INT(0));
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue option(args[0]);
+    run_callback = args[1]->IntegerValue();
+
+    rc = weechat_config_option_reset((t_config_option *) API_STR2PTR(*option), run_callback);
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_option_set)
+{
+    int run_callback, rc;
+
+    API_FUNC(1, "config_option_set", API_RETURN_INT(WEECHAT_CONFIG_OPTION_SET_ERROR));
+    if (args.Length() != 3)
+        API_WRONG_ARGS(API_RETURN_INT(WEECHAT_CONFIG_OPTION_SET_ERROR));
+
+    String::AsciiValue option(args[0]);
+    String::AsciiValue value(args[1]);
+    run_callback = args[2]->IntegerValue();
+
+    rc = weechat_config_option_set((t_config_option *) API_STR2PTR(*option), *value, run_callback);
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_option_set_null)
+{
+    int run_callback, rc;
+
+    API_FUNC(1, "config_option_set_null", API_RETURN_INT(WEECHAT_CONFIG_OPTION_SET_ERROR));
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_INT(WEECHAT_CONFIG_OPTION_SET_ERROR));
+
+    String::AsciiValue option(args[0]);
+    run_callback = args[1]->IntegerValue();
+
+    rc = weechat_config_option_set_null((t_config_option *) API_STR2PTR(*option), run_callback);
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_option_unset)
+{
+    int rc;
+
+    API_FUNC(1, "config_option_unset", API_RETURN_INT(WEECHAT_CONFIG_OPTION_UNSET_ERROR));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(WEECHAT_CONFIG_OPTION_UNSET_ERROR));
+
+    String::AsciiValue option(args[0]);
+
+    rc = weechat_config_option_unset((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_option_rename)
+{
+    API_FUNC(1, "config_option_rename", API_RETURN_ERROR);
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue option(args[0]);
+    String::AsciiValue new_name(args[1]);
+
+    weechat_config_option_rename((t_config_option *) API_STR2PTR(*option), *new_name);
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_option_is_null)
+{
+    int value;
+
+    API_FUNC(1, "config_option_is_null", API_RETURN_INT(1));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(1));
+
+    String::AsciiValue option(args[0]);
+
+    value = weechat_config_option_is_null((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(value);
+}
+
+API_FUNC_DEF(config_option_default_is_null)
+{
+    int value;
+
+    API_FUNC(1, "config_option_default_is_null", API_RETURN_INT(1));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(1));
+
+    String::AsciiValue option(args[0]);
+
+    value = weechat_config_option_default_is_null((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(value);
+}
+
+API_FUNC_DEF(config_boolean)
+{
+    int value;
+
+    API_FUNC(1, "config_boolean", API_RETURN_INT(0));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue option(args[0]);
+
+    value = weechat_config_boolean((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(value);
+}
+
+API_FUNC_DEF(config_boolean_default)
+{
+    int value;
+
+    API_FUNC(1, "config_boolean_default", API_RETURN_INT(0));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue option(args[0]);
+
+    value = weechat_config_boolean_default((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(value);
+}
+
+API_FUNC_DEF(config_integer)
+{
+    int value;
+
+    API_FUNC(1, "config_integer", API_RETURN_INT(0));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue option(args[0]);
+
+    value = weechat_config_integer((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(value);
+}
+
+API_FUNC_DEF(config_integer_default)
+{
+    int value;
+
+    API_FUNC(1, "config_integer_default", API_RETURN_INT(0));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue option(args[0]);
+
+    value = weechat_config_integer_default((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_INT(value);
+}
+
+API_FUNC_DEF(config_string)
+{
+    const char *result;
+
+    API_FUNC(1, "config_string", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue option(args[0]);
+
+    result = weechat_config_string((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(config_string_default)
+{
+    const char *result;
+
+    API_FUNC(1, "config_string_default", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue option(args[0]);
+
+    result = weechat_config_string_default((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(config_color)
+{
+    const char *result;
+
+    API_FUNC(1, "config_color", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue option(args[0]);
+
+    result = weechat_config_color((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(config_color_default)
+{
+    const char *result;
+
+    API_FUNC(1, "config_color_default", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue option(args[0]);
+
+    result = weechat_config_color_default((t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(config_write_option)
+{
+    API_FUNC(1, "config_write_option", API_RETURN_ERROR);
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue config_file(args[0]);
+    String::AsciiValue option(args[1]);
+
+    weechat_config_write_option((t_config_file *) API_STR2PTR(*config_file), (t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_write_line)
+{
+    API_FUNC(1, "config_write_line", API_RETURN_ERROR);
+    if (args.Length() != 3)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue config_file(args[0]);
+    String::AsciiValue option_name(args[1]);
+    String::AsciiValue value(args[2]);
+
+    weechat_config_write_line((t_config_file *) API_STR2PTR(*config_file), *option_name, "%s", *value);
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_write)
+{
+    int rc;
+
+    API_FUNC(1, "config_write", API_RETURN_INT(-1));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(-1));
+
+    String::AsciiValue config_file(args[0]);
+
+    rc = weechat_config_write((t_config_file *) API_STR2PTR(*config_file));
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_read)
+{
+    int rc;
+
+    API_FUNC(1, "config_read", API_RETURN_INT(-1));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(-1));
+
+    String::AsciiValue config_file(args[0]);
+
+    rc = weechat_config_read((t_config_file *) API_STR2PTR(*config_file));
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_reload)
+{
+    int rc;
+
+    API_FUNC(1, "config_reload", API_RETURN_INT(-1));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(-1));
+
+    String::AsciiValue config_file(args[0]);
+
+    rc = weechat_config_reload((t_config_file *) API_STR2PTR(*config_file));
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_option_free)
+{
+    API_FUNC(1, "config_option_free", API_RETURN_ERROR);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue option(args[0]);
+
+    plugin_script_api_config_option_free(weechat_js_plugin, js_current_script, (t_config_option *) API_STR2PTR(*option));
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_section_free_options)
+{
+    API_FUNC(1, "config_section_free_options", API_RETURN_ERROR);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue section(args[0]);
+
+    plugin_script_api_config_section_free_options(weechat_js_plugin,
+                                                  js_current_script,
+                                                  (t_config_section *) API_STR2PTR(*section));
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_section_free)
+{
+    API_FUNC(1, "config_section_free", API_RETURN_ERROR);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue section(args[0]);
+
+    plugin_script_api_config_section_free(weechat_js_plugin,
+                                          js_current_script,
+                                          (t_config_section *) API_STR2PTR(*section));
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_free)
+{
+    API_FUNC(1, "config_free", API_RETURN_ERROR);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue config_file(args[0]);
+
+    plugin_script_api_config_free(weechat_js_plugin,
+                                  js_current_script,
+                                  (t_config_file *) API_STR2PTR(*config_file));
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_get)
+{
+    char *result;
+
+    API_FUNC(1, "config_get", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue option(args[0]);
+
+    result = API_PTR2STR(weechat_config_get(*option));
+
+    API_RETURN_STRING_FREE(result);
+}
+
+API_FUNC_DEF(config_get_plugin)
+{
+    const char *result;
+
+    API_FUNC(1, "config_get_plugin", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue option(args[0]);
+
+    result = plugin_script_api_config_get_plugin(weechat_js_plugin,
+                                                 js_current_script,
+                                                 *option);
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(config_is_set_plugin)
+{
+    int rc;
+
+    API_FUNC(1, "config_is_set_plugin", API_RETURN_INT(0));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue option(args[0]);
+
+    rc = plugin_script_api_config_is_set_plugin(weechat_js_plugin,
+                                                js_current_script,
+                                                *option);
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_set_plugin)
+{
+    int rc;
+
+    API_FUNC(1, "config_set_plugin", API_RETURN_INT(WEECHAT_CONFIG_OPTION_SET_ERROR));
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_INT(WEECHAT_CONFIG_OPTION_SET_ERROR));
+
+    String::AsciiValue option(args[0]);
+    String::AsciiValue value(args[1]);
+
+    rc = plugin_script_api_config_set_plugin(weechat_js_plugin,
+                                             js_current_script,
+                                             *option,
+                                             *value);
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(config_set_desc_plugin)
+{
+    API_FUNC(1, "config_set_desc_plugin", API_RETURN_ERROR);
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue option(args[0]);
+    String::AsciiValue description(args[1]);
+
+    plugin_script_api_config_set_desc_plugin(weechat_js_plugin,
+                                             js_current_script,
+                                             *option,
+                                             *description);
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(config_unset_plugin)
+{
+    int rc;
+
+    API_FUNC(1, "config_unset_plugin", API_RETURN_INT(WEECHAT_CONFIG_OPTION_UNSET_ERROR));
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_INT(WEECHAT_CONFIG_OPTION_UNSET_ERROR));
+
+    String::AsciiValue option(args[0]);
+
+    rc = plugin_script_api_config_unset_plugin(weechat_js_plugin,
+                                               js_current_script,
+                                               *option);
+
+    API_RETURN_INT(rc);
+}
+
+API_FUNC_DEF(key_bind)
+{
+    struct t_hashtable *hashtable;
+    Handle<Object> obj;
+    int num_keys;
+
+    API_FUNC(1, "key_bind", API_RETURN_INT(0));
+    if (args.Length() != 2 && args[1]->IsObject())
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue context(args[0]);
+    obj = args[1]->ToObject();
+
+    hashtable = weechat_js_object_to_hashtable(obj,
+                                               WEECHAT_SCRIPT_HASHTABLE_DEFAULT_SIZE,
+                                               WEECHAT_HASHTABLE_STRING,
+                                               WEECHAT_HASHTABLE_STRING);
+
+    num_keys = weechat_key_bind(*context, hashtable);
+
+    if (hashtable)
+        weechat_hashtable_free(hashtable);
+
+    API_RETURN_INT(num_keys);
+}
+
+API_FUNC_DEF(key_unbind)
+{
+    int num_keys;
+
+    API_FUNC(1, "key_unbind", API_RETURN_INT(0));
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_INT(0));
+
+    String::AsciiValue context(args[0]);
+    String::AsciiValue key(args[1]);
+
+    num_keys = weechat_key_unbind(*context, *key);
+
+    API_RETURN_INT(num_keys);
+}
+
+API_FUNC_DEF(prefix)
+{
+    const char *result;
+
+    API_FUNC(0, "prefix", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue prefix(args[0]);
+
+    result = weechat_prefix(*prefix);
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(color)
+{
+    const char *result;
+
+    API_FUNC(0, "color", API_RETURN_EMPTY);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_EMPTY);
+
+    String::AsciiValue color(args[0]);
+
+    result = weechat_color(*color);
+
+    API_RETURN_STRING(result);
+}
+
+API_FUNC_DEF(prnt)
+{
+    API_FUNC(0, "prnt", API_RETURN_ERROR);
+    if (args.Length() != 2)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue buffer(args[0]);
+    String::AsciiValue message(args[1]);
+
+    plugin_script_api_printf(weechat_js_plugin,
+                             js_current_script,
+                             (t_gui_buffer *) API_STR2PTR(*buffer),
+                             "%s", *message);
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(prnt_date_tags)
+{
+    int date;
+
+    API_FUNC(1, "prnt_date_tags", API_RETURN_ERROR);
+    if (args.Length() != 4)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue buffer(args[0]);
+    date = args[1]->IntegerValue();
+    String::AsciiValue tags(args[2]);
+    String::AsciiValue message(args[3]);
+
+    plugin_script_api_printf_date_tags(weechat_js_plugin,
+                                       js_current_script,
+                                       (t_gui_buffer *) API_STR2PTR(*buffer),
+                                       date,
+                                       *tags,
+                                       "%s", *message);
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(prnt_y)
+{
+    int y;
+
+    API_FUNC(1, "prnt_y", API_RETURN_ERROR);
+    if (args.Length() != 3)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue buffer(args[0]);
+    y = args[1]->IntegerValue();
+    String::AsciiValue message(args[2]);
+
+    plugin_script_api_printf_y(weechat_js_plugin,
+                               js_current_script,
+                               (t_gui_buffer *) API_STR2PTR(*buffer),
+                               y,
+                               "%s", *message);
+
+    API_RETURN_OK;
+}
+
+API_FUNC_DEF(log_print)
+{
+    API_FUNC(1, "log_print", API_RETURN_ERROR);
+    if (args.Length() != 1)
+        API_WRONG_ARGS(API_RETURN_ERROR);
+
+    String::AsciiValue message(args[0]);
+
+    plugin_script_api_log_printf(weechat_js_plugin,
+                                 js_current_script,
+                                 "%s", *message);
+
+    API_RETURN_OK;
+}
+
 void
 WeechatJsCore::loadLibs()
 {
@@ -836,6 +1446,44 @@ WeechatJsCore::loadLibs()
     API_DEF_FUNC(config_new_option);
     API_DEF_FUNC(config_search_option);
     API_DEF_FUNC(config_string_to_boolean);
+    API_DEF_FUNC(config_option_reset);
+    API_DEF_FUNC(config_option_set);
+    API_DEF_FUNC(config_option_set_null);
+    API_DEF_FUNC(config_option_unset);
+    API_DEF_FUNC(config_option_rename);
+    API_DEF_FUNC(config_option_is_null);
+    API_DEF_FUNC(config_option_default_is_null);
+    API_DEF_FUNC(config_boolean);
+    API_DEF_FUNC(config_boolean_default);
+    API_DEF_FUNC(config_integer);
+    API_DEF_FUNC(config_integer_default);
+    API_DEF_FUNC(config_string);
+    API_DEF_FUNC(config_string_default);
+    API_DEF_FUNC(config_color);
+    API_DEF_FUNC(config_color_default);
+    API_DEF_FUNC(config_write_option);
+    API_DEF_FUNC(config_write_line);
+    API_DEF_FUNC(config_write);
+    API_DEF_FUNC(config_read);
+    API_DEF_FUNC(config_reload);
+    API_DEF_FUNC(config_option_free);
+    API_DEF_FUNC(config_section_free_options);
+    API_DEF_FUNC(config_section_free);
+    API_DEF_FUNC(config_free);
+    API_DEF_FUNC(config_get);
+    API_DEF_FUNC(config_get_plugin);
+    API_DEF_FUNC(config_is_set_plugin);
+    API_DEF_FUNC(config_set_plugin);
+    API_DEF_FUNC(config_set_desc_plugin);
+    API_DEF_FUNC(config_unset_plugin);
+    API_DEF_FUNC(key_bind);
+    API_DEF_FUNC(key_unbind);
+    API_DEF_FUNC(prefix);
+    API_DEF_FUNC(color);
+    API_DEF_FUNC(prnt);
+    API_DEF_FUNC(prnt_date_tags);
+    API_DEF_FUNC(prnt_y);
+    API_DEF_FUNC(log_print);
 
     this->addGlobal("weechat", weechat_obj);
 }
